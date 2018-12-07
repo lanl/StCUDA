@@ -1,0 +1,116 @@
+How to run StCUDA on Linux
+
+Install VisualWorks Development Environment
+	http://www.cincomsmalltalk.com/main/
+	After installing, you should have a directory like
+		/home/askoh/visualworks/vw8.3.1
+			contains VisualWorks base code
+
+Install CUDA
+	https://developer.nvidia.com/cuda-toolkit
+		To Be Done (example for Linux)
+			Note the directory paths to
+				cuda.h
+				nvcuda.so
+				nvrtc64_92.so			note: '92' will change for different version
+				cudart64_92.so
+		
+Download StCUDA files into
+	C:\askoh\StCUDA\vw8.3.1
+	say, to look like
+	C:\askoh\StCUDA\vw8.3.1\StCUDA\StCUDA.pcl and other files.
+
+Copy
+	/home/askoh/visualworks/vw8.3.1/bin/win64/visual
+	to
+	/home/askoh/StCUDA/vw8.3.1/visual
+	
+Copy
+	/home/askoh/visualworks/vw8.3.1/image/visual64.im
+	to
+	/home/askoh/StCUDA/vw8.3.1/visual64.im
+
+Edit the following files to use your directory paths.
+	startVirginImage831_64.sh 
+	stcuda.sh
+
+If stcuda.im does not exist
+	Run ./startVirginImage831_64.sh
+		to launch virgin image.
+In VisualWorks Launcher window
+	Click menu item/Tools/Parcel Manager/
+	In Parcel Manager Window
+		Select/Popular folder in left pane/
+		Select/DLLCC-Tools...in right pane/
+			RightClick/Load/
+		Click menu item/File/Load Parcel File.../
+			Navigate to "C:\askoh\StCUDA\vw8.3.1\StCUDA\ASKOH.pcl"
+				Click/Open/		
+		Click menu item/File/Load Parcel File.../
+			Navigate to "C:\askoh\StCUDA\vw8.3.1\StCUDA\StCUDA.pcl"
+				Click/Open/		
+		Close Parcel Manager Window
+
+	Click menu item/Browse/Class-Variable-Name Space.../
+		In dialog Enter/stcuda
+			Select/StCUDA/
+		In Browser Window
+			Click/Definition tab/
+				Smalltalk defineClass: #StCUDALinux64
+					superclass: #{External.ExternalInterface}
+					indexedType: #none
+					private: false
+					instanceVariableNames: ''
+					classInstanceVariableNames: ''
+					imports: '
+							private StCUDALinux64Dictionary.*
+							'
+					category: 'StCUDA'
+					attributes: #(
+							#(#includeFiles #('cuda.h' 'nvrtc.h' 'cuda_runtime.h' 'builtin_types.h'))
+							#(#includeDirectories #('To Be Done/NVIDIA GPU Computing Toolkit/CUDA/v9.2/include'))
+							#(#libraryFiles #('libcuda.so' 'libnvrtc.so' 'libcudart.so'))
+							#(#libraryDirectories #('To Be Done/usr/local/cuda-9.2/targets/x86_64-linux/lib/stubs'))
+							#(#beVirtual false)
+							#(#optimizationLevel #full))
+			Match the names in #libraryFiles to your actual names.
+			Match the paths in #includeDirectories and #libraryDirectories to your actual paths.
+	Click menu item/File/Save Image As.../
+		Type
+			stcuda.im
+		to save as
+			/home/askoh/StCUDA/vw8.3.1/stcuda.im
+			
+	Click menu item/File/Exit VisualWorks.../
+		Since you have just saved stcuda.im there is no need to save again.
+		
+If stcuda.im exists
+	Run ./stcuda.sh
+In VisualWorks Launcher window
+	Click menu item/Browse/Class-Variable-Name Space.../
+		In dialog Enter/stcuda
+			Select/StCUDAVectorAdd/
+		In Browser Window
+			Select in the far right pane the method
+				exampleVectorAddDrvGC
+			In source code pane, select the comment (no quotes)
+				self new exampleVectorAddDrvGC.
+				RightClick/Do it/ to run it.
+				RightClick/Debug it/ to step through the code.
+				
+	Alternatively, Click menu item/Tools/Workspace/
+		Paste the following string
+			StCUDAVectorAdd new exampleVectorAddDrvGC.
+		Highlight it/RightClick/Do it/ to run it.
+			Other examples are 
+				StCUDAVectorAdd new exampleVectorAddDrvGC.
+				StCUDAVectorAdd new exampleVectorAddNvrtcGC.
+				StCUDAMatrixMul new exampleMatrixMulDrvGC.
+				StCUDAMatrixMul new exampleMatrixMulNvrtcGC.
+
+
+				
+				
+				
+				
+				
